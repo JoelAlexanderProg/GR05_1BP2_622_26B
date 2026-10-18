@@ -103,6 +103,15 @@ Se desarrolló con TDD: cada prueba tiene tres commits, `TDD n · Rojo`, `TDD n 
 
 El punto de partida es la aplicación de la Tarea 3 después de las refactorizaciones de la Práctica 1: repositorio [GR05_1BT3_622_26B](https://github.com/JoelAlexanderProg/GR05_1BT3_622_26B), commit [`5a1696a`](https://github.com/JoelAlexanderProg/GR05_1BT3_622_26B/commit/5a1696a).
 
+## Cómo ejecutar las pruebas unitarias
+
+Solo se necesita Java 17 o superior. Desde la carpeta del proyecto:
+
+    .\mvnw.cmd test      (Windows)
+    ./mvnw test          (Linux o macOS)
+
+Maven ejecuta todas las pruebas de `src/test/java` y al final muestra cuántas pasaron. Si alguna falla, indica cuál y por qué.
+
 ## Integrantes
 
 - Lenin Alejandro Jerez Chimbo
