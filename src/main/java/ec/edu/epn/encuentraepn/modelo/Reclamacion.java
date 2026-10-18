@@ -137,4 +137,12 @@ public class Reclamacion {
     public AcuerdoEntrega getAcuerdo() {
         return acuerdo;
     }
+
+    public String getMotivoRechazo() {
+        return null;
+    }
+
+    public LocalDateTime getFechaRechazo() {
+        return null;
+    }
 }

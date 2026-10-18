@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Incremento 3: rechazar una reclamación. Pruebas de las reglas de la entidad Reclamacion.
@@ -24,6 +25,17 @@ class ReclamacionTest {
         reclamacion.rechazar("Las respuestas no coinciden con el objeto");
 
         assertEquals(EstadoReclamacion.RECHAZADA, reclamacion.getEstado());
+    }
+
+    @Test
+    @DisplayName("Al rechazar se guardan el motivo, sin espacios sobrantes, y la fecha del rechazo")
+    void rechazarGuardaElMotivoYLaFecha() {
+        Reclamacion reclamacion = reclamacionPendiente();
+
+        reclamacion.rechazar("  Las respuestas no coinciden con el objeto  ");
+
+        assertEquals("Las respuestas no coinciden con el objeto", reclamacion.getMotivoRechazo());
+        assertNotNull(reclamacion.getFechaRechazo());
     }
 
     /**
