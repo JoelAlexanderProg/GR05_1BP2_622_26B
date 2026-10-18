@@ -12,6 +12,7 @@ Práctica 2 de Metodologías Ágiles (ISWD622, EPN, 2026-B), Grupo 5: desarrollo
 | 1 | CU-02 Consultar y filtrar reportes en el mapa | `ControlConsultaReportes` | `mapaReportes.jsp`, `detalleReporte.jsp` |
 | 2 | CU-03 Reclamar un objeto encontrado | `ControlReclamaciones` | `formularioReclamacion.jsp` |
 | 2 | CU-04 Gestionar devolución del objeto | `ControlDevoluciones` | `panelDevolucion.jsp`, `vistaAcuerdoEntrega.jsp` |
+| 3 | Rechazar una reclamación (Práctica 2, desarrollado con TDD) | `ControlDevoluciones` | `panelDevolucion.jsp`, `inicio.jsp` |
 
 ## Trazabilidad de los modelos al código
 
@@ -36,6 +37,7 @@ Los diagramas de diseño, ya adaptados a Java Web, están en [`docs/modelos`](do
 | Base de datos | H2 embebida (archivo en `~/gr05_1bp2/`) |
 | Servidor | Apache Tomcat 10.1 |
 | Construcción | Maven |
+| Pruebas unitarias | JUnit 5 y Mockito |
 
 No se usan frameworks de aplicación.
 
@@ -51,8 +53,9 @@ src/main/webapp/
 ├── WEB-INF/vistas/   una JSP por clase de interfaz
 ├── css/, js/         estilos y mapa
 └── lib/leaflet/      librería del mapa
+src/test/java/        pruebas unitarias (JUnit 5 y Mockito)
 docs/modelos/         diagramas de clases y de secuencia del diseño
-pruebas/              casos de prueba automatizados del flujo básico (CP-01A a CP-04)
+pruebas/              casos de prueba automatizados en el navegador (CP-01A a CP-05)
 ```
 
 ## Cómo ejecutar
@@ -73,13 +76,28 @@ Para probar el flujo completo se necesitan dos usuarios, por ejemplo en dos nave
 
 ## Casos de prueba
 
-`pruebas/casos-de-prueba.js` ejecuta en un navegador los cinco casos de prueba del flujo básico definidos en la Tarea 1, con dos usuarios en sesiones separadas, y comprueba el resultado esperado de cada paso. Con la aplicación en ejecución y la base de datos vacía:
+`pruebas/casos-de-prueba.js` ejecuta en un navegador los cinco casos de prueba del flujo básico definidos en la Tarea 1 y el caso CP-05 del Incremento 3 (rechazar una reclamación), con dos usuarios en sesiones separadas, y comprueba el resultado esperado de cada paso. Con la aplicación en ejecución y la base de datos vacía:
 
 ```bash
 cd pruebas
 npm install puppeteer-core
 node casos-de-prueba.js capturas
 ```
+
+## Incremento 3: rechazar una reclamación (TDD)
+
+Quien registró un objeto encontrado puede rechazar una reclamación pendiente indicando el motivo. La reclamación queda RECHAZADA, el reclamante ve el motivo en «Mis reclamaciones» y el reporte sigue activo para otras reclamaciones.
+
+Se desarrolló con TDD: cada prueba tiene tres commits, `TDD n · Rojo`, `TDD n · Verde` y `TDD n · Refactor`.
+
+| N.º | Tipo | Prueba | Qué comprueba |
+|---|---|---|---|
+| 1 | Unitaria | `ReclamacionTest` | Al rechazar una reclamación pendiente, queda RECHAZADA |
+| 2 | Unitaria | `ReclamacionTest` | Se guardan el motivo, sin espacios sobrantes, y la fecha del rechazo |
+| 3 | Unitaria | `ReclamacionTest` | Una reclamación ya aceptada no se puede rechazar |
+| 4 | Unitaria | `ReclamacionTest` | Un motivo de más de 200 caracteres no se acepta |
+| 5 | Con mocks (Mockito) | `ControlDevolucionesTest` | El control guarda el rechazo con un DAO simulado, sin base de datos |
+| 6 | Con parámetros | `ReclamacionTest` | Un motivo vacío o en blanco no se acepta (un caso por fila) |
 
 ## Origen del código
 

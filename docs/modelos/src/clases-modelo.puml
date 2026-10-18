@@ -3,7 +3,7 @@
 ' Diagrama de clases de diseño: paquete modelo (entidades JPA).
 ' Refina el «Modelo de dominio acumulado — Incremento 2» de la Tarea 1 con los tipos de Java y las anotaciones JPA.
 ' Se omiten los getters y las clases de apoyo (Campus, DatosReporte, FiltrosReporte, DatosPublicos).
-' En verde: lo que se añadió al pasar del análisis al diseño.
+' En verde: lo que se añadió al pasar del análisis al diseño. En azul: Incremento 3 (rechazar una reclamación, Práctica 2).
 skinparam nodesep 45
 skinparam ranksep 55
 hide empty members
@@ -52,9 +52,12 @@ class Reclamacion <<Entity>> {
   - id : UUID
   - fechaCreacion : LocalDateTime
   - estado : EstadoReclamacion
+  <color:#1A56C4>- motivoRechazo : String [0..1]</color>
+  <color:#1A56C4>- fechaRechazo : LocalDateTime [0..1]</color>
   + Reclamacion(reclamante, objeto)
   + aceptar() : void
   + completar() : void
+  <color:#1A56C4>+ rechazar(motivo : String) : void</color>
   <color:#1E6B3A>+ agregarRespuesta(pregunta, textoPrivado) : void</color>
   <color:#1E6B3A>+ registrarAcuerdo(acuerdo : AcuerdoEntrega) : void</color>
   <color:#1E6B3A>+ estaPendiente() : boolean</color>
@@ -91,6 +94,7 @@ enum EstadoReclamacion #E3F4E8 {
   PENDIENTE
   ACEPTADA
   COMPLETADA
+  <color:#1A56C4>RECHAZADA</color>
 }
 
 Usuario "1" <-- "0..*" Reporte : autor

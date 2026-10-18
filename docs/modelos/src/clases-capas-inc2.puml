@@ -33,6 +33,7 @@ package "controlador (Servlets) — «control»" {
     + listarPendientes(actor, reporteId) : List<Reclamacion>
     + consultarRespuestas(actor, reclamacionId) : List<RespuestaVerificacion>
     + aceptarReclamacion(actor, id) : void
+    <color:#1A56C4>+ rechazarReclamacion(actor, id, motivo) : void</color>
     + proponerEntrega(actor, id, lugar, fecha) : AcuerdoEntrega
     + consultarAcuerdo(actor, id) : AcuerdoEntrega
     + confirmarAcuerdo(actor, id) : void
