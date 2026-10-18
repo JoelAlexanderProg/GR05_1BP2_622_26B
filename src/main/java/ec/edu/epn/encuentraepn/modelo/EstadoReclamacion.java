@@ -7,7 +7,8 @@ public enum EstadoReclamacion {
 
     PENDIENTE("Pendiente"),
     ACEPTADA("Aceptada"),
-    COMPLETADA("Completada");
+    COMPLETADA("Completada"),
+    RECHAZADA("Rechazada");
 
     private final String etiqueta;
 

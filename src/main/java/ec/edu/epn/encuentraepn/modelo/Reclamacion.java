@@ -85,6 +85,12 @@ public class Reclamacion {
         estado = EstadoReclamacion.COMPLETADA;
     }
 
+    /**
+     * Incremento 3: quien registró el objeto rechaza la reclamación e indica el motivo.
+     */
+    public void rechazar(String motivo) {
+    }
+
     private void exigirEstado(EstadoReclamacion esperado) {
         if (estado != esperado) {
             throw new IllegalStateException("La reclamación debe estar en estado " + esperado + " y está " + estado);
