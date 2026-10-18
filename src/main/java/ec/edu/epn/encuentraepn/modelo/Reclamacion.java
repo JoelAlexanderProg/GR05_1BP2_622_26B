@@ -64,7 +64,7 @@ public class Reclamacion {
         this.reclamante = reclamante;
         this.objeto = objeto;
         this.estado = EstadoReclamacion.PENDIENTE;
-        this.fechaCreacion = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        this.fechaCreacion = ahora();
     }
 
     // SEC-03 · 15: «create» respuestas privadas (reclamacion, pregunta, texto)
@@ -96,7 +96,14 @@ public class Reclamacion {
     public void rechazar(String motivo) {
         estado = EstadoReclamacion.RECHAZADA;
         motivoRechazo = motivo.trim();
-        fechaRechazo = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        fechaRechazo = ahora();
+    }
+
+    /**
+     * Fecha y hora actuales, sin segundos, como se registran las fechas de la reclamación.
+     */
+    private static LocalDateTime ahora() {
+        return LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
     }
 
     private void exigirEstado(EstadoReclamacion esperado) {
