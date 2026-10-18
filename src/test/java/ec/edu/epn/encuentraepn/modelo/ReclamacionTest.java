@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 class ReclamacionTest {
 
+    private static final String MOTIVO = "Las respuestas no coinciden con el objeto";
+
     private final Usuario encontrante = new Usuario("Bruno Salas", "bruno.salas@epn.edu.ec");
     private final Usuario reclamante = new Usuario("Andrea Paz", "andrea.paz@epn.edu.ec");
 
@@ -23,7 +25,7 @@ class ReclamacionTest {
     void rechazarUnaReclamacionPendienteLaDejaRechazada() {
         Reclamacion reclamacion = reclamacionPendiente();
 
-        reclamacion.rechazar("Las respuestas no coinciden con el objeto");
+        reclamacion.rechazar(MOTIVO);
 
         assertEquals(EstadoReclamacion.RECHAZADA, reclamacion.getEstado());
     }
@@ -33,9 +35,9 @@ class ReclamacionTest {
     void rechazarGuardaElMotivoYLaFecha() {
         Reclamacion reclamacion = reclamacionPendiente();
 
-        reclamacion.rechazar("  Las respuestas no coinciden con el objeto  ");
+        reclamacion.rechazar("  " + MOTIVO + "  ");
 
-        assertEquals("Las respuestas no coinciden con el objeto", reclamacion.getMotivoRechazo());
+        assertEquals(MOTIVO, reclamacion.getMotivoRechazo());
         assertNotNull(reclamacion.getFechaRechazo());
     }
 
@@ -45,8 +47,7 @@ class ReclamacionTest {
         Reclamacion reclamacion = reclamacionPendiente();
         reclamacion.aceptar();
 
-        assertThrows(IllegalStateException.class,
-                () -> reclamacion.rechazar("Las respuestas no coinciden con el objeto"));
+        assertThrows(IllegalStateException.class, () -> reclamacion.rechazar(MOTIVO));
         assertEquals(EstadoReclamacion.ACEPTADA, reclamacion.getEstado());
     }
 
