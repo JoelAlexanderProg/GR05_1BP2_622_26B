@@ -122,6 +122,9 @@ public class ControlDevoluciones extends ControlBase {
      * Incremento 3: quien registró el objeto rechaza una reclamación pendiente e indica el motivo.
      */
     public void rechazarReclamacion(Usuario actor, UUID id, String motivo) {
+        Reclamacion reclamacion = buscarReclamacionRecibida(actor, id);
+        reclamacion.rechazar(motivo);
+        reclamacionDAO.actualizar(reclamacion);
     }
 
     public AcuerdoEntrega proponerEntrega(Usuario actor, UUID id, String lugar, LocalDateTime fecha) {
