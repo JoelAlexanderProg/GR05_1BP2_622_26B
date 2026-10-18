@@ -95,6 +95,9 @@ public class Reclamacion {
      */
     public void rechazar(String motivo) {
         exigirEstado(EstadoReclamacion.PENDIENTE);
+        if (motivo.trim().length() > 200) {
+            throw new IllegalArgumentException("El motivo admite hasta 200 caracteres.");
+        }
         estado = EstadoReclamacion.RECHAZADA;
         motivoRechazo = motivo.trim();
         fechaRechazo = ahora();
