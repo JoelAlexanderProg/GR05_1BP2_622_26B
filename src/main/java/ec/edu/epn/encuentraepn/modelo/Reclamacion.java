@@ -51,6 +51,11 @@ public class Reclamacion {
     @OneToOne(mappedBy = "reclamacion", cascade = CascadeType.ALL)
     private AcuerdoEntrega acuerdo;
 
+    @Column(length = 200)
+    private String motivoRechazo;
+
+    private LocalDateTime fechaRechazo;
+
     protected Reclamacion() {
     }
 
@@ -90,6 +95,8 @@ public class Reclamacion {
      */
     public void rechazar(String motivo) {
         estado = EstadoReclamacion.RECHAZADA;
+        motivoRechazo = motivo.trim();
+        fechaRechazo = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
     }
 
     private void exigirEstado(EstadoReclamacion esperado) {
@@ -139,10 +146,10 @@ public class Reclamacion {
     }
 
     public String getMotivoRechazo() {
-        return null;
+        return motivoRechazo;
     }
 
     public LocalDateTime getFechaRechazo() {
-        return null;
+        return fechaRechazo;
     }
 }
