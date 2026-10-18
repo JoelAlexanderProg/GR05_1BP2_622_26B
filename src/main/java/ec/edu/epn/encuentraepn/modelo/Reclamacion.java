@@ -94,6 +94,7 @@ public class Reclamacion {
      * Incremento 3: quien registró el objeto rechaza la reclamación e indica el motivo.
      */
     public void rechazar(String motivo) {
+        exigirEstado(EstadoReclamacion.PENDIENTE);
         estado = EstadoReclamacion.RECHAZADA;
         motivoRechazo = motivo.trim();
         fechaRechazo = ahora();
