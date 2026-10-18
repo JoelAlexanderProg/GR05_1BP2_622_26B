@@ -8,6 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Incremento 3: rechazar una reclamación. Pruebas de las reglas de la entidad Reclamacion.
@@ -36,6 +37,17 @@ class ReclamacionTest {
 
         assertEquals("Las respuestas no coinciden con el objeto", reclamacion.getMotivoRechazo());
         assertNotNull(reclamacion.getFechaRechazo());
+    }
+
+    @Test
+    @DisplayName("Una reclamación ya aceptada no se puede rechazar y sigue ACEPTADA")
+    void unaReclamacionAceptadaNoSePuedeRechazar() {
+        Reclamacion reclamacion = reclamacionPendiente();
+        reclamacion.aceptar();
+
+        assertThrows(IllegalStateException.class,
+                () -> reclamacion.rechazar("Las respuestas no coinciden con el objeto"));
+        assertEquals(EstadoReclamacion.ACEPTADA, reclamacion.getEstado());
     }
 
     /**
