@@ -28,7 +28,18 @@ import java.util.UUID;
 public class ControlDevoluciones extends ControlBase {
 
     private final ReporteDAO reporteDAO = new ReporteDAO();
-    private final ReclamacionDAO reclamacionDAO = new ReclamacionDAO();
+    private final ReclamacionDAO reclamacionDAO;
+
+    public ControlDevoluciones() {
+        this(new ReclamacionDAO());
+    }
+
+    /**
+     * Recibe el acceso a datos de las reclamaciones, para que una prueba pueda reemplazarlo por un objeto simulado.
+     */
+    ControlDevoluciones(ReclamacionDAO reclamacionDAO) {
+        this.reclamacionDAO = reclamacionDAO;
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -105,6 +116,12 @@ public class ControlDevoluciones extends ControlBase {
         reporte.reservar();
         // SEC-04 · 19a: la aceptación y la reserva se guardan en una sola transacción
         reclamacionDAO.actualizar(reclamacion);
+    }
+
+    /**
+     * Incremento 3: quien registró el objeto rechaza una reclamación pendiente e indica el motivo.
+     */
+    public void rechazarReclamacion(Usuario actor, UUID id, String motivo) {
     }
 
     public AcuerdoEntrega proponerEntrega(Usuario actor, UUID id, String lugar, LocalDateTime fecha) {
