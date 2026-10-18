@@ -67,6 +67,8 @@ class ReclamacionTest {
             "'',         motivo vacío",
             "'   ',      solo espacios",
             "'\t\t',     solo tabulaciones",
+            "' \t ',     espacios y tabulaciones",
+  
     })
     @DisplayName("Un motivo vacío o en blanco no se acepta y la reclamación sigue PENDIENTE")
     void unMotivoVacioNoSeAcepta(String motivo, String caso) {
