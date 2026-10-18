@@ -51,6 +51,16 @@ class ReclamacionTest {
         assertEquals(EstadoReclamacion.ACEPTADA, reclamacion.getEstado());
     }
 
+    @Test
+    @DisplayName("Un motivo de más de 200 caracteres no se acepta y la reclamación sigue PENDIENTE")
+    void unMotivoDeMasDe200CaracteresNoSeAcepta() {
+        Reclamacion reclamacion = reclamacionPendiente();
+        String motivoLargo = "a".repeat(201);
+
+        assertThrows(IllegalArgumentException.class, () -> reclamacion.rechazar(motivoLargo));
+        assertEquals(EstadoReclamacion.PENDIENTE, reclamacion.getEstado());
+    }
+
     /**
      * Reclamación recién registrada (PENDIENTE) sobre un objeto encontrado.
      */
