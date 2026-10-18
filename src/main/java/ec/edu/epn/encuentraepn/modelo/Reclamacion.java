@@ -98,19 +98,24 @@ public class Reclamacion {
      */
     public void rechazar(String motivo) {
         exigirEstado(EstadoReclamacion.PENDIENTE);
-        validarMotivo(motivo);
+        String motivoValido = validarMotivo(motivo);
         estado = EstadoReclamacion.RECHAZADA;
-        motivoRechazo = motivo.trim();
+        motivoRechazo = motivoValido;
         fechaRechazo = ahora();
     }
 
-    private static void validarMotivo(String motivo) {
+    /**
+     * Devuelve el motivo sin espacios al inicio ni al final, o lanza IllegalArgumentException si no es válido.
+     */
+    private static String validarMotivo(String motivo) {
         if (motivo == null || motivo.isBlank()) {
             throw new IllegalArgumentException("Escriba el motivo del rechazo.");
         }
-        if (motivo.trim().length() > MAX_MOTIVO) {
+        String motivoSinEspacios = motivo.trim();
+        if (motivoSinEspacios.length() > MAX_MOTIVO) {
             throw new IllegalArgumentException("El motivo admite hasta " + MAX_MOTIVO + " caracteres.");
         }
+        return motivoSinEspacios;
     }
 
     /**
