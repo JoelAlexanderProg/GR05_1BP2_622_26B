@@ -28,6 +28,9 @@ import java.util.UUID;
 @Table(name = "reclamacion")
 public class Reclamacion {
 
+    /** Longitud máxima del motivo de un rechazo. */
+    public static final int MAX_MOTIVO = 200;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -51,7 +54,7 @@ public class Reclamacion {
     @OneToOne(mappedBy = "reclamacion", cascade = CascadeType.ALL)
     private AcuerdoEntrega acuerdo;
 
-    @Column(length = 200)
+    @Column(length = MAX_MOTIVO)
     private String motivoRechazo;
 
     private LocalDateTime fechaRechazo;
@@ -95,12 +98,16 @@ public class Reclamacion {
      */
     public void rechazar(String motivo) {
         exigirEstado(EstadoReclamacion.PENDIENTE);
-        if (motivo.trim().length() > 200) {
-            throw new IllegalArgumentException("El motivo admite hasta 200 caracteres.");
-        }
+        validarMotivo(motivo);
         estado = EstadoReclamacion.RECHAZADA;
         motivoRechazo = motivo.trim();
         fechaRechazo = ahora();
+    }
+
+    private static void validarMotivo(String motivo) {
+        if (motivo.trim().length() > MAX_MOTIVO) {
+            throw new IllegalArgumentException("El motivo admite hasta " + MAX_MOTIVO + " caracteres.");
+        }
     }
 
     /**
