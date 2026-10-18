@@ -1,5 +1,6 @@
 // Ejecuta los casos de prueba del flujo básico definidos en la Tarea 1 (CP-01A, CP-01B, CP-02, CP-03, CP-04)
-// sobre la aplicación en ejecución, con dos sesiones de navegador (U-A y U-B), y guarda capturas y resultados.
+// y el caso CP-05 del Incremento 3 (rechazar una reclamación) sobre la aplicación en ejecución,
+// con dos sesiones de navegador (U-A y U-B), y guarda capturas y resultados.
 //
 // Uso:      npm install puppeteer-core
 //           node casos-de-prueba.js <carpeta de capturas> [URL base]
@@ -28,6 +29,7 @@ const F3 = 'Llavero con tres llaves';
 const F4 = 'Calculadora gris con tapa';
 const F5 = 'Calculadora azul sin funda';
 const LUGAR = "Entrada principal del Edificio de Sistemas";
+const MOTIVO = 'La marca que indica no coincide con la de la calculadora';
 
 const resultados = [];
 let casoActual = null;
@@ -309,6 +311,39 @@ const descripcionesEnMapa = (page) => page.$$eval('#resultados li a', (enlaces) 
     acuerdo.includes(LUGAR) && respuestasFinales.includes('LJ') && reclamacionFinal.includes('Completada')
     && !lista.includes(F1) && lista.length === 4 && !(await existe(a, '#reclamar')));
   await captura(a, '20-cp04-detalle-entregado.png');
+
+  // ------------------------------------------------------------------ CP-05 (Incremento 3)
+  caso('CP-05', 'Rechazar una reclamación');
+  const idF4 = await idDeReporte(a, F4);
+  await ir(a, `/reportes/detalle?id=${idF4}`);
+  await enviar(a, '#reclamar');
+  await (await a.$('form.formulario input[type="text"]')).type('Casio');
+  await enviar(a, 'form.formulario button[type="submit"]');
+  paso(1, 'U-A registra una reclamación sobre F4, que queda PENDIENTE', (await texto(a)).includes('Reclamación registrada'));
+
+  await ir(b, `/devoluciones?reporte=${idF4}`);
+  await enviar(b, '#pendientes tbody a');
+  paso(2, 'U-B revisa la reclamación y el panel ofrece rechazarla con un motivo',
+    (await textoDe(b, '#estadoReclamacion')) === 'Pendiente' && await existe(b, '#motivo') && await existe(b, '#rechazar'));
+  await b.type('#motivo', MOTIVO);
+  await captura(b, '21-cp05-rechazar-reclamacion.png');
+  await enviar(b, '#rechazar');
+  paso(3, 'La reclamación queda RECHAZADA y se muestra el motivo',
+    (await textoDe(b, '#estadoReclamacion')) === 'Rechazada' && (await textoDe(b, '#motivoRechazo')) === MOTIVO);
+  await captura(b, '22-cp05-reclamacion-rechazada.png');
+
+  await ir(b, `/devoluciones?reporte=${idF4}`);
+  const panelF4 = await texto(b);
+  await ir(b, `/reportes/detalle?id=${idF4}`);
+  paso(4, 'F4 no tiene reclamaciones pendientes ni en curso y sigue ACTIVO para otras reclamaciones',
+    panelF4.includes('No hay reclamaciones pendientes') && !panelF4.includes('continuar con la devolución')
+    && (await textoDe(b, '#detalle')).includes('Activo'));
+
+  await ir(a, '/inicio');
+  const misReclamaciones = await textoDe(a, '#misReclamaciones tbody');
+  paso(5, 'U-A ve en «Mis reclamaciones» que su reclamación fue rechazada y el motivo',
+    misReclamaciones.includes(F4) && misReclamaciones.includes('Rechazada') && misReclamaciones.includes(MOTIVO));
+  await captura(a, '23-cp05-mis-reclamaciones.png');
 
   await navegador.close();
 
