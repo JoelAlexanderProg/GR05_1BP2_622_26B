@@ -3,9 +3,8 @@ package ec.edu.epn.encuentraepn.modelo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-import java.util.List;
-
+import static ec.edu.epn.encuentraepn.DatosDePrueba.MOTIVO;
+import static ec.edu.epn.encuentraepn.DatosDePrueba.reclamacionPendiente;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,11 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * Incremento 3: rechazar una reclamación. Pruebas de las reglas de la entidad Reclamacion.
  */
 class ReclamacionTest {
-
-    private static final String MOTIVO = "Las respuestas no coinciden con el objeto";
-
-    private final Usuario encontrante = new Usuario("Bruno Salas", "bruno.salas@epn.edu.ec");
-    private final Usuario reclamante = new Usuario("Andrea Paz", "andrea.paz@epn.edu.ec");
 
     @Test
     @DisplayName("Rechazar una reclamación pendiente la deja en estado RECHAZADA")
@@ -59,16 +53,5 @@ class ReclamacionTest {
 
         assertThrows(IllegalArgumentException.class, () -> reclamacion.rechazar(motivoLargo));
         assertEquals(EstadoReclamacion.PENDIENTE, reclamacion.getEstado());
-    }
-
-    /**
-     * Reclamación recién registrada (PENDIENTE) sobre un objeto encontrado.
-     */
-    private Reclamacion reclamacionPendiente() {
-        DatosReporte datos = new DatosReporte(TipoReporte.ENCONTRADO, null, "Calculadora científica negra",
-                LocalDate.of(2026, 9, 28), -0.21045, -78.48920, List.of("¿Qué iniciales tiene detrás?"));
-        Reporte reporte = new Reporte(datos, encontrante, new Categoria("Calculadoras"),
-                new Ubicacion(-0.21045, -78.48920, Campus.ZONA_CENTRO));
-        return new Reclamacion(reclamante, reporte);
     }
 }
