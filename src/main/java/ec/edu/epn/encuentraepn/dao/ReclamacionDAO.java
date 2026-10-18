@@ -28,10 +28,10 @@ public class ReclamacionDAO extends GenericDAO<Reclamacion> {
      */
     public Reclamacion buscarEnCurso(Reporte reporte) {
         List<Reclamacion> reclamaciones = em()
-                .createQuery("SELECT c FROM Reclamacion c WHERE c.objeto = :reporte AND c.estado <> :estado",
+                .createQuery("SELECT c FROM Reclamacion c WHERE c.objeto = :reporte AND c.estado IN :estados",
                         Reclamacion.class)
                 .setParameter("reporte", reporte)
-                .setParameter("estado", EstadoReclamacion.PENDIENTE)
+                .setParameter("estados", List.of(EstadoReclamacion.ACEPTADA, EstadoReclamacion.COMPLETADA))
                 .getResultList();
         return reclamaciones.isEmpty() ? null : reclamaciones.get(0);
     }

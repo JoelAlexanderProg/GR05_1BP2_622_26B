@@ -57,7 +57,11 @@
                     <tr>
                         <td><c:out value="${reclamacion.objeto.descripcionPublica}"/></td>
                         <td>${fn:replace(reclamacion.fechaCreacion, 'T', ' ')}</td>
-                        <td>${reclamacion.estado.etiqueta}</td>
+                        <td>${reclamacion.estado.etiqueta}
+                            <c:if test="${not empty reclamacion.motivoRechazo}">
+                                <div class="motivo">Motivo: <c:out value="${reclamacion.motivoRechazo}"/></div>
+                            </c:if>
+                        </td>
                         <td class="enlaces">
                             <c:if test="${not empty reclamacion.acuerdo}">
                                 <a href="${ctx}/devoluciones?acuerdo=${reclamacion.id}">Acuerdo de entrega</a>

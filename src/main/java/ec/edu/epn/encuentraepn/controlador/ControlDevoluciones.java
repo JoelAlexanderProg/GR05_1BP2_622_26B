@@ -81,6 +81,14 @@ public class ControlDevoluciones extends ControlBase {
             confirmarDevolucion(actor, id, ahora());
             // SEC-04 · 44-45: devolución registrada → confirmación de devolución
             redirigir(request, response, "/devoluciones?reclamacion=" + id);
+        } else if ("rechazar".equals(accion)) {
+            // Incremento 3: rechazarReclamacion(actor, id, motivo); las reglas de la entidad se muestran como error
+            try {
+                rechazarReclamacion(actor, id, request.getParameter("motivo"));
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                throw new OperacionInvalidaException(e.getMessage());
+            }
+            redirigir(request, response, "/devoluciones?reclamacion=" + id);
         } else {
             throw new OperacionInvalidaException("La acción solicitada no existe.");
         }

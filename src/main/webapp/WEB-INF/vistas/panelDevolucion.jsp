@@ -51,6 +51,9 @@
     <%-- mostrarRespuestas(respuestas) --%>
     <h2>Reclamación de <c:out value="${reclamacion.reclamante.nombre}"/></h2>
     <p>Estado de la reclamación: <strong id="estadoReclamacion">${reclamacion.estado.etiqueta}</strong></p>
+    <c:if test="${not empty reclamacion.motivoRechazo}">
+        <p>Motivo del rechazo: <span id="motivoRechazo"><c:out value="${reclamacion.motivoRechazo}"/></span></p>
+    </c:if>
     <table id="respuestas">
         <thead>
         <tr><th>Pregunta</th><th>Respuesta del reclamante</th></tr>
@@ -67,12 +70,24 @@
 
     <c:set var="acuerdo" value="${reclamacion.acuerdo}"/>
     <c:choose>
-        <%-- aceptarReclamacion(id) --%>
-        <c:when test="${reclamacion.estaPendiente() and reporte.estaActivo()}">
-            <form method="post" action="${ctx}/devoluciones" class="acciones">
-                <input type="hidden" name="accion" value="aceptar">
+        <%-- aceptarReclamacion(id) y, desde el Incremento 3, rechazarReclamacion(id, motivo) --%>
+        <c:when test="${reclamacion.estaPendiente()}">
+            <c:if test="${reporte.estaActivo()}">
+                <form method="post" action="${ctx}/devoluciones" class="acciones">
+                    <input type="hidden" name="accion" value="aceptar">
+                    <input type="hidden" name="id" value="${reclamacion.id}">
+                    <button type="submit" class="boton" id="aceptar">Aceptar reclamación</button>
+                </form>
+            </c:if>
+            <h2>Rechazar reclamación</h2>
+            <form method="post" action="${ctx}/devoluciones" class="formulario">
+                <input type="hidden" name="accion" value="rechazar">
                 <input type="hidden" name="id" value="${reclamacion.id}">
-                <button type="submit" class="boton" id="aceptar">Aceptar reclamación</button>
+                <label for="motivo">Motivo del rechazo (lo verá el reclamante)</label>
+                <textarea id="motivo" name="motivo" rows="3" maxlength="200" required></textarea>
+                <div class="acciones">
+                    <button type="submit" class="boton secundario" id="rechazar">Rechazar reclamación</button>
+                </div>
             </form>
         </c:when>
 
