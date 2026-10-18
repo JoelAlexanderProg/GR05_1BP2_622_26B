@@ -105,6 +105,9 @@ public class Reclamacion {
     }
 
     private static void validarMotivo(String motivo) {
+        if (motivo == null || motivo.isBlank()) {
+            throw new IllegalArgumentException("Escriba el motivo del rechazo.");
+        }
         if (motivo.trim().length() > MAX_MOTIVO) {
             throw new IllegalArgumentException("El motivo admite hasta " + MAX_MOTIVO + " caracteres.");
         }
